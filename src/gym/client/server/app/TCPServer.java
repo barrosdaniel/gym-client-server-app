@@ -6,9 +6,10 @@ import java.io.*;
 public class TCPServer {
 
     public static void main(String args[]) {
+        System.out.println("LOG: TCP Server started.");
+        int SERVER_PORT = 1105;
         try {
-            int serverPort = 7896;
-            ServerSocket listenSocket = new ServerSocket(serverPort);
+            ServerSocket listenSocket = new ServerSocket(SERVER_PORT);
             while (true) {
                 Socket clientSocket = listenSocket.accept();
                 Connection c = new Connection(clientSocket);

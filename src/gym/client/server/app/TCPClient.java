@@ -2,23 +2,47 @@ package gym.client.server.app;
 
 import java.net.*;
 import java.io.*;
+import java.util.Scanner;
 
 public class TCPClient {
-
+    private static Scanner input = new Scanner(System.in);
+    
     public static void main(String args[]) {
         System.out.println("LOG: TCP Client started.");
 
+        // Initialise server members
+        // TODO: Get next member number dinamically
+        // int nextMemberNumber = GymClientServerApp.getNextMemberNumber();
         int SERVER_PORT = 1105;
         String HOST_NAME = "localhost";
         Socket socket = null;
-        String message = "Hello from Client";
+        
+        // Get member details
+        String firstName = getMemberFirstName();
+        String lastName = getMemberLastName();
+        String address = getMemberAddress();
+        String phoneNumber = getMemberPhoneNumber();
+        
+        // Assemble client message
+        String message = "Hello from " + firstName + " " + lastName 
+                + " " + address + " " + phoneNumber;
+        
+        // Send message to server
         try {
+            // Create comms socket
             socket = new Socket(HOST_NAME, SERVER_PORT);
-            DataInputStream in = new DataInputStream(socket.getInputStream());
+            
+            // Send message to server
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             out.writeUTF(message);
+            System.out.println("Sending Data to Server...............");
+            System.out.println(firstName + ":" + lastName + ":" + address + ":"
+                    + phoneNumber);
+            
+            // Receive server response
+            DataInputStream in = new DataInputStream(socket.getInputStream());
             String data = in.readUTF();
-            System.out.println("Message Received From Server: " + data);
+            System.out.println("Server Response: " + data);
         } catch (UnknownHostException e) {
             System.out.println("Sock:" + e.getMessage());
         } catch (EOFException e) {
@@ -34,5 +58,25 @@ public class TCPClient {
                 }
             }
         }
+    }
+    
+    private static String getMemberFirstName() {
+        System.out.print("Enter your First Name: \n");
+        return input.nextLine();
+    }
+
+    private static String getMemberLastName() {
+        System.out.print("Enter your Last Name: \n");
+        return input.nextLine();
+    }
+
+    private static String getMemberAddress() {
+        System.out.print("Enter your Address: \n");
+        return input.nextLine();
+    }
+
+    private static String getMemberPhoneNumber() {
+        System.out.print("Enter your Phone Number: \n");
+        return input.nextLine();
     }
 }
