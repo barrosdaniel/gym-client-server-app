@@ -31,6 +31,7 @@ public class TCPClient {
             // Assemble client message
             String message = firstName + ":" + lastName + ":" + address + ":"
                     + phoneNumber;
+            String finalMessage = message + ":" + nextMemberNumber;
 
             // Send message to server
             try {
@@ -39,7 +40,7 @@ public class TCPClient {
 
                 // Send message to server
                 DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-                out.writeUTF(message);
+                out.writeUTF(finalMessage);
                 System.out.println("Sending Data to Server...............");
                 System.out.println(message);
 
