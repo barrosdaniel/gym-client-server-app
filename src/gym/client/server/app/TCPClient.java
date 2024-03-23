@@ -6,19 +6,16 @@ import java.io.*;
 public class TCPClient {
 
     public static void main(String args[]) {
-        System.out.println("LOG: TCPClient started.");
-        
-        // arguments supply message and hostname of destination
-        // if running from a command prompt
-        Socket s = null;
-        String hostName = "localhost";
+        System.out.println("LOG: TCP Client started.");
+
+        int SERVER_PORT = 1105;
+        String HOST_NAME = "localhost";
+        Socket socket = null;
         String message = "Hello from Client";
         try {
-            int serverPort = 7896;
-
-            s = new Socket(hostName, serverPort);
-            DataInputStream in = new DataInputStream(s.getInputStream());
-            DataOutputStream out = new DataOutputStream(s.getOutputStream());
+            socket = new Socket(HOST_NAME, SERVER_PORT);
+            DataInputStream in = new DataInputStream(socket.getInputStream());
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
             out.writeUTF(message);
             String data = in.readUTF();
             System.out.println("Message Received From Server: " + data);
@@ -29,11 +26,12 @@ public class TCPClient {
         } catch (IOException e) {
             System.out.println("IO:" + e.getMessage());
         } finally {
-            if (s != null)
+            if (socket != null) {
                 try {
-                s.close();
-            } catch (IOException e) {
-                System.out.println("close:" + e.getMessage());
+                    socket.close();
+                } catch (IOException e) {
+                    System.out.println("close:" + e.getMessage());
+                }
             }
         }
     }
