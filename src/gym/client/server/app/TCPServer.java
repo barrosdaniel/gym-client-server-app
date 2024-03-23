@@ -15,8 +15,6 @@ public class TCPServer {
             while (true) {
                 Socket clientSocket = listenSocket.accept();
                 Connection c = new Connection(clientSocket);
-                System.out.printf("\nServer waiting on: %d for client from %d ",
-                        listenSocket.getLocalPort(), clientSocket.getPort());
             }
         } catch (IOException e) {
             System.out.println("Listen :" + e.getMessage());
@@ -78,7 +76,6 @@ class Connection extends Thread {
         try {
             FileWriter fw = new FileWriter(filename, true);
             fw.write(data + "\n");
-            System.out.println("Data received from client saved into " + filename);
             fw.close();
         } catch (IOException e) {
             e.printStackTrace();
