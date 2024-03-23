@@ -31,7 +31,6 @@ public class TCPClient {
             // Assemble client message
             String message = firstName + ":" + lastName + ":" + address + ":"
                     + phoneNumber;
-            String finalMessage = message + ":" + nextMemberNumber;
 
             // Send message to server
             try {
@@ -40,14 +39,15 @@ public class TCPClient {
 
                 // Send message to server
                 DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-                out.writeUTF(finalMessage);
+                out.writeUTF(message);
                 System.out.println("Sending Data to Server...............");
                 System.out.println(message);
 
                 // Receive server response
                 DataInputStream in = new DataInputStream(socket.getInputStream());
                 String data = in.readUTF();
-                System.out.println("Server Response: " + data);
+                System.out.println("Server Response: " + data + ": " 
+                        + nextMemberNumber);
             } catch (UnknownHostException e) {
                 System.out.println("Sock:" + e.getMessage());
             } catch (EOFException e) {
