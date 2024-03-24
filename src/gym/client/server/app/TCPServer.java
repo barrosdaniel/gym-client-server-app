@@ -14,12 +14,10 @@ public class TCPServer {
     static int INTERVAL = 2000;
 
     public static void main(String args[]) {
-        System.out.println("LOG: TCP Server started.");
-        
         // Initialise timer for Object file sync with txt file.
         Timer timer = new Timer();
         timer.schedule(new SyncObjectFile(), INTERVAL, INTERVAL);
-        
+
         try {
             ServerSocket listenSocket = new ServerSocket(SERVER_PORT);
             while (true) {
@@ -38,7 +36,6 @@ class Connection extends Thread {
     DataOutputStream out;
     Socket clientSocket;
     String fileName;
-    String objectFileName;
 
     public Connection(Socket aClientSocket) {
         try {
@@ -52,6 +49,7 @@ class Connection extends Thread {
         }
     }
 
+    @Override
     public void run() {
         try {
             // Receive message from client
@@ -62,12 +60,6 @@ class Connection extends Thread {
             // Write message data to txt file
             if (data != null) {
                 writeMemberDataToFile(data);
-            }
-
-            // TEMP: Save data to Object file. To be replaced by timer.
-//            syncObjectFile();
-            for (Member m : TCPServer.allMembers) {
-                System.out.println(m.toString());
             }
 
             // Send reponse to client
@@ -97,19 +89,28 @@ class Connection extends Thread {
             e.printStackTrace();
         }
     }
+}
+
+class SyncObjectFile extends TimerTask {
     
-    private void syncObjectFile() {
-        readTextFileData();
+    String fileName;
+    String objectFileName;
+    
+    @Override
+    public void run() {
+        fileName = "memberlist.txt";
+        objectFileName = "memberlistObject";
+        TCPServer.allMembers.clear();
+        readTextFileData();            
         writeMembersToObjectFile();
     }
-
-    private void readTextFileData() {
-        System.out.println("Synchronising data to " + fileName);
+    
+    // Read contents of txt file and save to allMembers List
+    public void readTextFileData() {
         String memberLine;
         Member member;
         String[] memberData;
 
-        // Read contents of txt file and save to allMembers List
         try {
             FileReader fr = new FileReader(fileName);
             BufferedReader br = new BufferedReader(fr);
@@ -126,29 +127,19 @@ class Connection extends Thread {
             e.printStackTrace();
         }
     }
-
-    private void writeMembersToObjectFile() {
-        objectFileName = "memberlistObject";
-        FileOutputStream fos = null;
-        ObjectOutputStream out = null;
+    
+    public void writeMembersToObjectFile() {
+        FileOutputStream fos;
+        ObjectOutputStream out;
         try {
-            fos = new FileOutputStream(objectFileName);
+            fos = new FileOutputStream(objectFileName, false);
             out = new ObjectOutputStream(fos);
             for (Member member : TCPServer.allMembers) {
-                out.writeObject(member);                
+                out.writeObject(member);
             }
             out.close();
-            System.out.println("Member objects saved to object file.");
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-}
-
-class SyncObjectFile extends TimerTask {
-    
-    public void run() {
-        int counter = 0;
-        System.out.println("Timer tick " + counter++);
     }
 }

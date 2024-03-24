@@ -9,8 +9,6 @@ public class TCPClient {
     private static Scanner input = new Scanner(System.in);
 
     public static void main(String args[]) {
-        System.out.println("LOG: TCP Client started.");
-
         // Initialise server members
         int SERVER_PORT = 1105;
         String HOST_NAME = "localhost";
