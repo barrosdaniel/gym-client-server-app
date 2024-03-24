@@ -44,4 +44,12 @@ public class Member implements Serializable {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    @Override
+    public String toString() {
+        return "Member{" + "firstName=" + firstName + ", lastName=" + lastName 
+                + ", address=" + address + ", phoneNumber=" + phoneNumber + '}';
+    }
+    
+    
 }

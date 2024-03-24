@@ -2,10 +2,12 @@ package gym.client.server.app;
 
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 
 public class TCPServer {
     
     static int nextMemberNumber = 1;
+    static ArrayList<Member> allMembers = new ArrayList();
 
     public static void main(String args[]) {
         System.out.println("LOG: TCP Server started.");
@@ -50,8 +52,13 @@ class Connection extends Thread {
 
             // Write message data to txt file
             if (data != null) {
-//                System.out.println(data);
                 writeMemberDataToFile(data);
+            }
+            
+            // TEMP: Save data to Object file. To be replaced by timer.
+            syncObjectFile();
+            for (Member m : TCPServer.allMembers) {
+                System.out.println(m.toString());
             }
 
             // Send reponse to client
@@ -80,5 +87,33 @@ class Connection extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void syncObjectFile() {
+        System.out.println("Synchronising data to " + filename);
+        String memberLine;
+        Member member;
+        String[] memberData;
+        
+        // Read contents of txt file and save to allMembers List
+        try {
+            FileReader fr = new FileReader(filename);
+            BufferedReader br = new BufferedReader(fr);
+            while ((memberLine = br.readLine()) != null) {
+                memberData = memberLine.split(":");
+                member = new Member();
+                member.setFirstName(memberData[0]);
+                member.setLastName(memberData[1]);
+                member.setAddress(memberData[2]);
+                member.setPhoneNumber(memberData[3]);
+                TCPServer.allMembers.add(member);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        
+        // Write allMembers List contents to object file
+        
     }
 }
