@@ -3,15 +3,23 @@ package gym.client.server.app;
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class TCPServer {
 
     static int nextMemberNumber = 1;
     static ArrayList<Member> allMembers = new ArrayList();
+    static int SERVER_PORT = 1105;
+    static int INTERVAL = 2000;
 
     public static void main(String args[]) {
         System.out.println("LOG: TCP Server started.");
-        int SERVER_PORT = 1105;
+        
+        // Initialise timer for Object file sync with txt file.
+        Timer timer = new Timer();
+        timer.schedule(new SyncObjectFile(), INTERVAL, INTERVAL);
+        
         try {
             ServerSocket listenSocket = new ServerSocket(SERVER_PORT);
             while (true) {
@@ -57,8 +65,7 @@ class Connection extends Thread {
             }
 
             // TEMP: Save data to Object file. To be replaced by timer.
-            readTextFileData();
-            writeMembersToObjectFile();
+//            syncObjectFile();
             for (Member m : TCPServer.allMembers) {
                 System.out.println(m.toString());
             }
@@ -89,6 +96,11 @@ class Connection extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    
+    private void syncObjectFile() {
+        readTextFileData();
+        writeMembersToObjectFile();
     }
 
     private void readTextFileData() {
@@ -130,5 +142,13 @@ class Connection extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+}
+
+class SyncObjectFile extends TimerTask {
+    
+    public void run() {
+        int counter = 0;
+        System.out.println("Timer tick " + counter++);
     }
 }

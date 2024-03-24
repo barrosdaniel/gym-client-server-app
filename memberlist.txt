@@ -1,5 +1,2 @@
+
 Tom:Smith:25 Spencer St:0411 222 333
-Dana:Scully:1 Civic St:1 212 123 4785
-Fox:Mulder:1 Civic St:1 212 555 9741
-Daniel:Barros:1 Test St:0400 111 222
-Lucas:Podolski:1 Arsenal Pl:0455 666 777

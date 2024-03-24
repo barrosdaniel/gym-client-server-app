@@ -12,8 +12,6 @@ public class TCPClient {
         System.out.println("LOG: TCP Client started.");
 
         // Initialise server members
-        // TODO: Get next member number dinamically
-        // int nextMemberNumber = GymClientServerApp.getNextMemberNumber();
         int SERVER_PORT = 1105;
         String HOST_NAME = "localhost";
         Socket socket = null;
