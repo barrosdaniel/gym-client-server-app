@@ -6,15 +6,14 @@ import java.util.Scanner;
 
 public class TCPClient {
 
+    // Declare and initialise server members
+    private static String HOST_NAME = "localhost";
+    private static int SERVER_PORT = 1105;
     private static Scanner input = new Scanner(System.in);
+    private static Socket socket;
+    private static int nextMemberNumber = 1;
 
     public static void main(String args[]) {
-        // Initialise server members
-        int SERVER_PORT = 1105;
-        String HOST_NAME = "localhost";
-        Socket socket = null;
-        int nextMemberNumber = 1;
-
         // Loop through until client process stopped
         while (true) {
             System.out.println("Enter Detail for Member: " + nextMemberNumber);

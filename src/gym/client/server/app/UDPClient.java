@@ -5,52 +5,39 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.Scanner;
 
 public class UDPClient {
 
-    private static String Username;
-    private static String hostName;
+    // Declare and initialise server members
+    private static String HOST_NAME = "localhost";
+    private static int SERVER_PORT = 2205;
+    private static DatagramSocket socket;
+    private static String OBJECT_FILE_NAME = "memberlistObject";
 
     public static void main(String args[]) {
 
-        //The first argument is the message to send to the server. 
-        //The second argument is the name of the server.
-        DatagramSocket aSocket = null;
-        Scanner input = new Scanner(System.in);
-        System.out.print("Enter your name:");
-        Username = input.nextLine();
-        //you can uncomment and read the input to set hostname
-        // System.out.print("Enter the Hostname, the copmuter IPaddress:");
-        // hostName = input.nextLine();
-        hostName = "localhost";  //localhost
         try {
+            socket = new DatagramSocket();
 
-            //Create a UDP socket
-            aSocket = new DatagramSocket();
+            // Prepare the message to send to the server
+            byte[] message = OBJECT_FILE_NAME.getBytes();
+            InetAddress host = InetAddress.getByName(HOST_NAME);
 
-            //Prepare the message to send to the server
-            byte[] m = Username.getBytes();
-            InetAddress aHost = InetAddress.getByName(hostName);
+            // Create UDP datagram
+            DatagramPacket request = new DatagramPacket(message,
+                    OBJECT_FILE_NAME.length(), host, SERVER_PORT);
 
-            //Agreed port
-            int serverPort = 6789;
+            // Send request to server
+            socket.send(request);
 
-            //Create a UDP datagram
-            DatagramPacket request
-                    = new DatagramPacket(m, Username.length(), aHost, serverPort);
-
-            //Send the request
-            aSocket.send(request);
-
-            //Prepare a buffer to receive the reply from the server
+            // Prepare buffer to receive server reply
             byte[] buffer = new byte[1000];
 
-            //Waiting for reply
+            // Listen for reply
             DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
-            aSocket.receive(reply);
+            socket.receive(reply);
 
-            //Display the reply
+            // Display the reply
             String response = new String(reply.getData(), 0, reply.getLength());
             System.out.print("Server Response: " + response);
 
@@ -59,8 +46,8 @@ public class UDPClient {
         } catch (IOException e) {
             System.out.println("IO: " + e.getMessage());
         } finally {
-            if (aSocket != null) {
-                aSocket.close();
+            if (socket != null) {
+                socket.close();
             }
         }
     }
