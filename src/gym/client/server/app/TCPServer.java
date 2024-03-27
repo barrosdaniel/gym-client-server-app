@@ -18,6 +18,8 @@ public class TCPServer {
         Timer timer = new Timer();
         timer.schedule(new SyncObjectFile(), INTERVAL, INTERVAL);
 
+        // Listen to client requests and create a new threaded connection for 
+        // each client request.
         try {
             ServerSocket listenSocket = new ServerSocket(SERVER_PORT);
             while (true) {
