@@ -75,9 +75,12 @@ public class UDPServer {
         sb.append(String.format("|%-30s", "Address"));
         sb.append(String.format("|%-20s|", "Phone Number"));
         sb.append("\n========================================"
-                + "=======================================================");
+                + "=======================================================\n");
         for (Member member : allMembersList) {
-            sb.append(member.toString());
+            sb.append(String.format("|%-20s", member.getFirstName()));
+            sb.append(String.format("|%-20s", member.getLastName()));
+            sb.append(String.format("|%-30s", member.getAddress()));
+            sb.append(String.format("|%-20s|\n", member.getPhoneNumber()));
         }
         
         messageString = sb.toString();
@@ -99,15 +102,12 @@ public class UDPServer {
                     break;
                 }
             }
-            for (Member m : allMembersList) {
-                System.out.println(m.toString());
-            }
 	    in.close();
             fis.close();
 	} catch(IOException e) {
 	    e.printStackTrace();
 	} catch(ClassNotFoundException e){
-	     e.printStackTrace();
+	    e.printStackTrace();
 	}
     }
 }
