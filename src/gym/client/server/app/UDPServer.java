@@ -6,28 +6,42 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 
 public class UDPServer {
+    
+    private static int SERVER_PORT = 2205;
+    private static DatagramSocket socket;
 
     public static void main(String args[]) {
-        DatagramSocket aSocket = null;
         try {
-            aSocket = new DatagramSocket(6789);
-            // create socket at agreed port
+            // Create socket
+            socket = new DatagramSocket(SERVER_PORT);
+            
+            // Prepare buffer to receive client request
             byte[] buffer = new byte[1000];
+            
             while (true) {
-                DatagramPacket request = new DatagramPacket(buffer, buffer.length);
-                aSocket.receive(request);
-                System.out.println("Client Request: " + new String(request.getData(), 0, request.getLength()));
+                // Listen for client request
+                DatagramPacket request = new DatagramPacket(buffer, 
+                        buffer.length);
+                socket.receive(request);
+                
+                // Print client request
+                System.out.println("Client Request: " + new String(
+                        request.getData(), 0, request.getLength()));
+                
+                // Prepare response
                 DatagramPacket reply = new DatagramPacket(request.getData(), request.getLength(),
                         request.getAddress(), request.getPort());
-                aSocket.send(reply);
+                
+                // Send response to client
+                socket.send(reply);
             }
         } catch (SocketException e) {
             System.out.println("Socket: " + e.getMessage());
         } catch (IOException e) {
             System.out.println("IO: " + e.getMessage());
         } finally {
-            if (aSocket != null) {
-                aSocket.close();
+            if (socket != null) {
+                socket.close();
             }
         }
     }

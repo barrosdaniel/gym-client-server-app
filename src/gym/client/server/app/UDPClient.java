@@ -17,6 +17,7 @@ public class UDPClient {
     public static void main(String args[]) {
 
         try {
+            // Create socket
             socket = new DatagramSocket();
 
             // Prepare the message to send to the server
