@@ -1,5 +1,6 @@
 package gym.client.server.app;
 
+import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -53,6 +54,11 @@ public class UDPServer {
                 
                 // Send response to client
                 socket.send(reply);
+                
+                // Clear members list after sending response. This is needed to
+                // avoid duplication in the result set when a new client sends
+                // a request.
+                allMembersList.clear();
             }
         } catch (SocketException e) {
             System.out.println("Socket: " + e.getMessage());
@@ -88,14 +94,13 @@ public class UDPServer {
     }
 
     private static void getObjectFileData() {
-        Member member;
         FileInputStream fis;
 	ObjectInputStream in;
         try {
             fis = new FileInputStream(OBJECT_FILE_NAME);
 	    in = new ObjectInputStream(fis);
             while (true) {
-                member = (Member) in.readObject();
+                Member member = (Member) in.readObject();
                 if (member instanceof Member) {
                     allMembersList.add((Member) member);
                 } else {
@@ -103,7 +108,7 @@ public class UDPServer {
                 }
             }
 	    in.close();
-            fis.close();
+        } catch (EOFException e) {
 	} catch(IOException e) {
 	    e.printStackTrace();
 	} catch(ClassNotFoundException e){

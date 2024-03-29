@@ -1,3 +1,2 @@
 Tom:Smith:25 Spencer St:0411 222 333
 Linda:Carter:100 King St:0422 333 444
-Robert:Fowler:Pasadena, CA:1 212 273 0313
