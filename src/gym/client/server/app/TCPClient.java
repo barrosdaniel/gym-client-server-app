@@ -1,9 +1,31 @@
+/*
+Central Queensland University
+COIT13229 - Applied Distributed Systems (2024 Term 1)
+Campus: External
+Assignment 1 - Java Client/Server Application
+Student ID: 12184305
+Student Name: Daniel Barros
+ */
 package gym.client.server.app;
 
 import java.net.*;
 import java.io.*;
 import java.util.Scanner;
 
+/**
+ * The TCPClient class is a TCP client application for the gym client/server
+ * project.
+ *
+ * It communicates with the server to send member details (first name, last
+ * name, address, and phone number). It prompts the user for member details and
+ * sends them to the server via a TCP socket connection.
+ *
+ * This class implements the client-side functionality of the gym client/server
+ * application.
+ *
+ * @author Daniel Barros
+ * @version 1.0
+ */
 public class TCPClient {
 
     // Declare and initialise server members
@@ -13,10 +35,18 @@ public class TCPClient {
     private static Socket socket;
     private static int nextMemberNumber = 1;
 
+    /**
+     * The main method is the entry point for the TCPClient routines. It prompts
+     * the user for member details and sends them to the server via a TCP socket
+     * connection.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String args[]) {
-        // Loop through until client process stopped
+        // Loop through until client process is stopped
         while (true) {
             System.out.println("Enter Detail for Member: " + nextMemberNumber);
+
             // Get member details
             String firstName = getMemberFirstName();
             String lastName = getMemberLastName();
@@ -41,7 +71,7 @@ public class TCPClient {
                 // Receive server response
                 DataInputStream in = new DataInputStream(socket.getInputStream());
                 String data = in.readUTF();
-                System.out.println("Server Response: " + data + ": " 
+                System.out.println("Server Response: " + data + ": "
                         + nextMemberNumber);
             } catch (UnknownHostException e) {
                 System.out.println("Sock:" + e.getMessage());
@@ -63,39 +93,57 @@ public class TCPClient {
         }
     }
 
+    /**
+     * Prompt the user to enter the first name of the member. Validates the
+     * input to ensure it not blank and has no numbers or special characters.
+     *
+     * @return the first name entered by the user
+     */
     private static String getMemberFirstName() {
         String firstName;
-        
+
         do {
             System.out.print("Enter your First Name: \n");
             firstName = input.nextLine().trim();
             if (firstName.isEmpty() || !(firstName.matches("[a-zA-Z]+"))) {
-                System.out.println("Invalid input. First name must be "
-                        + "alphanumeric.");
+                System.out.println("Invalid input. First name must not be blank "
+                        + "or have numeric or special characters.");
             }
         } while (firstName.isEmpty() || !firstName.matches("[a-zA-Z]+"));
 
         return firstName;
     }
 
+    /**
+     * Prompt the user to enter the last name of the member. Validates the input
+     * to ensure it not blank and has no numbers or special characters.
+     *
+     * @return the last name entered by the user
+     */
     private static String getMemberLastName() {
         String lastName;
-        
+
         do {
             System.out.print("Enter your Last Name: \n");
             lastName = input.nextLine().trim();
             if (lastName.isEmpty() || !(lastName.matches("[a-zA-Z]+"))) {
-                System.out.println("Invalid input. Last name must be "
-                        + "alphanumeric.");
+                System.out.println("Invalid input. Last name must not be blank "
+                        + "or have numeric or special characters.");
             }
         } while (lastName.isEmpty() || !lastName.matches("[a-zA-Z]+"));
 
         return lastName;
     }
 
+    /**
+     * Prompt the user to enter the address of the member. Validates the input
+     * to ensure it is not blank.
+     *
+     * @return the address entered by the user
+     */
     private static String getMemberAddress() {
         String address;
-        
+
         do {
             System.out.print("Enter your Address: \n");
             address = input.nextLine().trim();
@@ -107,9 +155,15 @@ public class TCPClient {
         return address;
     }
 
+    /**
+     * Prompt the user to enter the phone number of the member. Validates the
+     * input to ensure it is not blank, is numeric and has 10 digits.
+     *
+     * @return the phone number entered by the user
+     */
     private static String getMemberPhoneNumber() {
         String phoneNumber;
-        
+
         do {
             System.out.print("Enter your Phone Number: \n");
             phoneNumber = input.nextLine().trim();
