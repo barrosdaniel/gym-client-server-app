@@ -9,6 +9,10 @@ public class UDPServer {
     
     private static int SERVER_PORT = 2205;
     private static DatagramSocket socket;
+    private static String OBJECT_FILE_NAME = "memberlistObject";
+    private static StringBuilder sb;
+    private static String messageString;
+    private static byte[] messageByte;
 
     public static void main(String args[]) {
         try {
@@ -28,9 +32,15 @@ public class UDPServer {
                 System.out.println("Client Request: " + new String(
                         request.getData(), 0, request.getLength()));
                 
-                // Prepare response
-                DatagramPacket reply = new DatagramPacket(request.getData(), request.getLength(),
-                        request.getAddress(), request.getPort());
+                // Get response data
+                // TODO
+
+                prepareMessage();
+                
+                // Prepare response packet
+                DatagramPacket reply = new DatagramPacket(messageByte, 
+                        messageByte.length, request.getAddress(), 
+                        request.getPort());
                 
                 // Send response to client
                 socket.send(reply);
@@ -44,5 +54,21 @@ public class UDPServer {
                 socket.close();
             }
         }
+    }
+
+    private static void prepareMessage() {
+        messageByte = new byte[10_000];
+        
+        sb = new StringBuilder();
+        sb.append("\n");
+        sb.append(String.format("|%-20s", "First Name"));
+        sb.append(String.format("|%-20s", "Last Name"));
+        sb.append(String.format("|%-30s", "Address"));
+        sb.append(String.format("|%-20s|", "Phone Number"));
+        sb.append("\n========================================"
+                + "=======================================================");
+        
+        messageString = sb.toString();
+        messageByte = messageString.getBytes();
     }
 }

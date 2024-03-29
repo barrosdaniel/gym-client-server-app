@@ -32,7 +32,7 @@ public class UDPClient {
             socket.send(request);
 
             // Prepare buffer to receive server reply
-            byte[] buffer = new byte[1000];
+            byte[] buffer = new byte[10_000];
 
             // Listen for reply
             DatagramPacket reply = new DatagramPacket(buffer, buffer.length);
@@ -40,7 +40,7 @@ public class UDPClient {
 
             // Display the reply
             String response = new String(reply.getData(), 0, reply.getLength());
-            System.out.print("Server Response: " + response);
+            System.out.println("Server Response: " + response);
 
         } catch (SocketException e) {
             System.out.println("Socket: " + e.getMessage());
@@ -52,5 +52,4 @@ public class UDPClient {
             }
         }
     }
-
 }
