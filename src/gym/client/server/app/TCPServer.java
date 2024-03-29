@@ -1,3 +1,11 @@
+/*
+Central Queensland University
+COIT13229 - Applied Distributed Systems (2024 Term 1)
+Campus: External
+Assignment 1 - Java Client/Server Application
+Student ID: 12184305
+Student Name: Daniel Barros
+ */
 package gym.client.server.app;
 
 import java.net.*;
@@ -6,14 +14,40 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * The TCPServer class is a TCP server for the gym client/server application.
+ * This server listens for client connections, receives member details from 
+ * clients, and writes the received data to a text file. It also periodically 
+ * synchronises the data from the text file to an object file.
+ * 
+ * This class implements the server-side functionality of the gym client/server 
+ * application.
+ * 
+ * @author Daniel Barros
+ * @version 1.0
+ */
 public class TCPServer {
 
-    static int nextMemberNumber = 1;
-    static ArrayList<Member> allMembers = new ArrayList();
-    static int SERVER_PORT = 1105;
-    static int INTERVAL = 2000;
+    // Declare and initialise constants    
+    private static int SERVER_PORT = 1105;
+    private static int INTERVAL = 2000;
+    
+    // Declare class members
+    static int nextMemberNumber;
+    static ArrayList<Member> allMembers;
 
+     /**
+     * The main method serves as the entry point for the TCP server.
+     * It initialises a timer for periodically syncing data from the text file 
+     * to the object file. It also listens for client connections and creates a 
+     * new threaded connection for each client request.
+     * 
+     * @param args command-line arguments (not used)
+     */
     public static void main(String args[]) {
+        nextMemberNumber = 1;
+        allMembers = new ArrayList();
+        
         // Initialise timer for Object file sync with txt file.
         Timer timer = new Timer();
         timer.schedule(new SyncObjectFile(), INTERVAL, INTERVAL);
@@ -51,6 +85,12 @@ class Connection extends Thread {
         }
     }
 
+     /**
+     * The run method represents the functionality executed by each thread when
+     * handling a client connection. It receives data from the client, writes it
+     * to a text file, sends a response to the client, and increments the server
+     * member counter.
+     */
     @Override
     public void run() {
         try {
@@ -82,6 +122,12 @@ class Connection extends Thread {
         }
     }
 
+    /**
+     * Writes the received member data to the text file in the pre-defined 
+     * format.
+     * 
+     * @param data the member data to write to the file
+     */    
     private void writeMemberDataToFile(String data) {
         try {
             FileWriter fw = new FileWriter(fileName, true);
@@ -98,6 +144,10 @@ class SyncObjectFile extends TimerTask {
     String fileName;
     String objectFileName;
     
+    /**
+     * The run method introduces the functionality executed by the timer task
+     * to synchronise data from the text file to the object file.
+     */
     @Override
     public void run() {
         fileName = "memberlist.txt";
@@ -107,7 +157,10 @@ class SyncObjectFile extends TimerTask {
         writeMembersToObjectFile();
     }
     
-    // Read contents of txt file and save to allMembers List
+    /**
+     * Reads the contents of the text file and saves them to the list of all 
+     * members.
+     */
     public void readTextFileData() {
         String memberLine;
         Member member;
@@ -130,6 +183,9 @@ class SyncObjectFile extends TimerTask {
         }
     }
     
+    /**
+     * Writes the list of all members data to the object file.
+     */
     public void writeMembersToObjectFile() {
         FileOutputStream fos;
         ObjectOutputStream out;
