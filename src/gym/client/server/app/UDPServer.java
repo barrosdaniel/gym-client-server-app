@@ -1,20 +1,29 @@
 package gym.client.server.app;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.ArrayList;
 
 public class UDPServer {
     
+    // Initialise constants
     private static int SERVER_PORT = 2205;
-    private static DatagramSocket socket;
     private static String OBJECT_FILE_NAME = "memberlistObject";
+    
+    // Declare class members
+    private static DatagramSocket socket;
     private static StringBuilder sb;
     private static String messageString;
     private static byte[] messageByte;
+    private static ArrayList<Member> allMembersList;
 
     public static void main(String args[]) {
+        allMembersList = new ArrayList();
+        
         try {
             // Create socket
             socket = new DatagramSocket(SERVER_PORT);
@@ -32,8 +41,8 @@ public class UDPServer {
                 System.out.println("Client Request: " + new String(
                         request.getData(), 0, request.getLength()));
                 
-                // Get response data
-                // TODO
+                // Get object file data
+                getObjectFileData();
 
                 prepareMessage();
                 
@@ -67,8 +76,38 @@ public class UDPServer {
         sb.append(String.format("|%-20s|", "Phone Number"));
         sb.append("\n========================================"
                 + "=======================================================");
+        for (Member member : allMembersList) {
+            sb.append(member.toString());
+        }
         
         messageString = sb.toString();
         messageByte = messageString.getBytes();
+    }
+
+    private static void getObjectFileData() {
+        Member member;
+        FileInputStream fis;
+	ObjectInputStream in;
+        try {
+            fis = new FileInputStream(OBJECT_FILE_NAME);
+	    in = new ObjectInputStream(fis);
+            while (true) {
+                member = (Member) in.readObject();
+                if (member instanceof Member) {
+                    allMembersList.add((Member) member);
+                } else {
+                    break;
+                }
+            }
+            for (Member m : allMembersList) {
+                System.out.println(m.toString());
+            }
+	    in.close();
+            fis.close();
+	} catch(IOException e) {
+	    e.printStackTrace();
+	} catch(ClassNotFoundException e){
+	     e.printStackTrace();
+	}
     }
 }
