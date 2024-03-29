@@ -64,22 +64,61 @@ public class TCPClient {
     }
 
     private static String getMemberFirstName() {
-        System.out.print("Enter your First Name: \n");
-        return input.nextLine();
+        String firstName;
+        
+        do {
+            System.out.print("Enter your First Name: \n");
+            firstName = input.nextLine().trim();
+            if (firstName.isEmpty() || !(firstName.matches("[a-zA-Z]+"))) {
+                System.out.println("Invalid input. First name must be "
+                        + "alphanumeric.");
+            }
+        } while (firstName.isEmpty() || !firstName.matches("[a-zA-Z]+"));
+
+        return firstName;
     }
 
     private static String getMemberLastName() {
-        System.out.print("Enter your Last Name: \n");
-        return input.nextLine();
+        String lastName;
+        
+        do {
+            System.out.print("Enter your Last Name: \n");
+            lastName = input.nextLine().trim();
+            if (lastName.isEmpty() || !(lastName.matches("[a-zA-Z]+"))) {
+                System.out.println("Invalid input. Last name must be "
+                        + "alphanumeric.");
+            }
+        } while (lastName.isEmpty() || !lastName.matches("[a-zA-Z]+"));
+
+        return lastName;
     }
 
     private static String getMemberAddress() {
-        System.out.print("Enter your Address: \n");
-        return input.nextLine();
+        String address;
+        
+        do {
+            System.out.print("Enter your Address: \n");
+            address = input.nextLine().trim();
+            if (address.isEmpty()) {
+                System.out.println("Invalid input. Address must not be empty.");
+            }
+        } while (address.isEmpty());
+
+        return address;
     }
 
     private static String getMemberPhoneNumber() {
-        System.out.print("Enter your Phone Number: \n");
-        return input.nextLine();
+        String phoneNumber;
+        
+        do {
+            System.out.print("Enter your Phone Number: \n");
+            phoneNumber = input.nextLine().trim();
+            if (phoneNumber.isEmpty() || !phoneNumber.matches("\\d{10}")) {
+                System.out.println("Invalid input. Phone number must be numeric"
+                        + " and have 10 digits. No spaces allowed.");
+            }
+        } while (phoneNumber.isEmpty() || !phoneNumber.matches("\\d{10}"));
+
+        return phoneNumber;
     }
 }
